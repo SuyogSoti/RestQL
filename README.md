@@ -38,12 +38,13 @@ requirements, the following preliminary specs are shown below.
 ### The Client
 
 What is shown below is the request that the client would send to the server.
-The query field les is know what to filter. If a model has many policies (a
+The query field lets the server know what to filter. If a model has many policies (a
 different model), then the syntax is defined there. The feature syntax is
 what ought to be returned. That syntax is very similar to the query syntax.
 The actions define the possible different actions that the server could do
 before sending the results back. I think these specs are fairly self-explanatory.
 
+```json
     {
         "query": {"id": 42, "policy": {"id": 54}},
         "features": {"id": true, "policy": {"id": true}},
@@ -62,7 +63,7 @@ before sending the results back. I think these specs are fairly self-explanatory
             ]
         }
     }
-
+```
 
 ### The Server
 
@@ -71,8 +72,8 @@ submits the json above as the request, the client would have the following
 work to do.
 
 1.  Convert the Json to a RestQL Request Object
-2.  Create a feature map which is described below
-3.  Pass that into the model controller
+1.  Create a feature map which is described below
+1.  Pass that into the model controller
 
 ```php
 class Policy
@@ -144,7 +145,7 @@ Using Clojures this process can be largely automated. The tricky part comes
 in when we look are querying for the models in `filterModel`. The
 `filterModel` is where the querying and the actions will take place. When
 fetching, the developer will have access to the request so they will know
-exactly whhat fields to fetch from the database.
+exactly what fields to fetch from the database.
 
 It is to be noted that the function for each feature will only be executed
 if the client requests for the feature but the functions for all
