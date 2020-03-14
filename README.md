@@ -45,24 +45,24 @@ The actions define the possible different actions that the server could do
 before sending the results back. I think these specs are fairly self-explanatory.
 
 ```json
-    {
-        "query": {"id": 42, "policy": {"id": 54}},
-        "features": {"id": true, "policy": {"id": true}},
-        "actions": {
-            "sort": [
-                {
-                    "feature": "string",
-                    "sortOrderAsc": true
-                },
-                {
-                    "feature": {
-                        "policy": "id"
-                    },
-                    "sortOrderAsc": true
-                }
-            ]
-        }
-    }
+{
+  "query": {"id": 42, "policy": {"id": 54}},
+  "features": {"id": true, "policy": {"id": true}},
+  "actions": {
+    "sort": [
+      {
+        "feature": "string",
+        "sortOrderAsc": true
+      },
+      {
+        "feature": {
+          "policy": "id"
+        },
+        "sortOrderAsc": true
+      }
+    ]
+  }
+}
 ```
 
 ### The Server
