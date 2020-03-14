@@ -42,26 +42,26 @@ A structured QL for exposing REST APIs.
    The actions define the possible different actions that the server could do
    before sending the results back. I think these specs are fairly self-explanatory.
 
-  #+BEGIN_SRC json
-    {
-        "query": {"id": 42, "policy": {"id": 54}},
-        "features": {"id": true, "policy": {"id": true}},
-        "actions": {
-            "sort": [
-                {
-                    "feature": "string",
-                    "sortOrderAsc": true
-                },
-                {
-                    "feature": {
-                        "policy": "id"
-                    },
-                    "sortOrderAsc": true
-                }
-            ]
-        }
-    }
-  #+END_SRC
+   #+BEGIN_SRC json
+     {
+         "query": {"id": 42, "policy": {"id": 54}},
+         "features": {"id": true, "policy": {"id": true}},
+         "actions": {
+             "sort": [
+                 {
+                     "feature": "string",
+                     "sortOrderAsc": true
+                 },
+                 {
+                     "feature": {
+                         "policy": "id"
+                     },
+                     "sortOrderAsc": true
+                 }
+             ]
+         }
+     }
+   #+END_SRC
 
   
 ** The Server
@@ -75,32 +75,51 @@ A structured QL for exposing REST APIs.
    3. Pass that into the model controller
 
    #+BEGIN_SRC php
+     class Policy
+     {
+         public $id;
+         public $name;
+         public function __construct(int $id)
+         {
+             $this->id = $id;
+             $this->name = "Something Random";
+         }
+     }
+
+     class MyModel
+     {
+         public $id;
+         public $name;
+         public $policies;
+
+         public function __construct(int $id, string $name, $policies = [])
+         {
+             $this->id = $id;
+             $this->name = $name;
+             $this->policies = $policies;
+         }
+     }
+
      // a helper function for the feature map
      function grabAttribute(string $attr) {
          return function ($model) use ($attr) {
-             return $model[$attr];
+             return $model->$attr;
          };
      }
 
      // Convert the Json to a RestQL Request Object
      $req = Request::GetRequestFromJson($rawJson);
 
+
      // The actual feature map
      $featureMap = [
          "filterModel" => function ($parentModel) use ($req) {
-             return [
-                 "id" => 42,
-                 "name" => "hi",
-                 "policies" => [
-                     ["id" => 54],
-                     ["id" => 89],
-                 ]
-             ];
+             return new MyModel(42, "Tom", [new Policy(54), new Policy(45)]);
          },
          "id" => grabAttribute("id"),
          "policy" => [
              "filterModel" => function ($parentModel) {
-                 return $parentModel["policies"][0];
+                 return $parentModel->policies;
              },
              "id" => grabAttribute("id")
          ]
@@ -108,7 +127,7 @@ A structured QL for exposing REST APIs.
 
      $mod = new ModelController($featureMap);
      $data = $mod->getModel($req); // returns the exact data that the client wants
-     var_dump($data);
+     echo json_encode($data) . "\n";
    #+END_SRC
 
    As it can be seen above, the feature map is where most of the work comes in
@@ -129,6 +148,10 @@ A structured QL for exposing REST APIs.
     It is to be noted that the function for each feature will only be executed
     if the client requests for the feature but the functions for all
     ~filterModel~ will be executed.
+    
+    It is also to be noted that ~filterModel~ may return either an array or a
+    object. If it returns an array, the feature map will be applied to each
+    element in that array.
   
 * Future
   

@@ -7,8 +7,8 @@ namespace RestQL;
  */
 class Request
 {
-    public $features = [];
-    public $actions = [];
+    public $features;
+    public $actions;
 
     public function __construct($features = [], $actions = [])
     {

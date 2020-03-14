@@ -15,11 +15,6 @@ class ModelController {
     public function getModel(Request $req)
     {
         $data = $this->depthFirstFeatureIteration($req->features);
-
-        foreach ($req->actions as $action) {
-
-        }
-
         return $data;
     }
 
@@ -33,17 +28,23 @@ class ModelController {
         }
 
         $filter = $featureMap['filterModel'];
-        $model = $filter($parentModel);
-
-        foreach ($features as $feature=>$val) {
-            if (is_bool($val) && $val) {
-                $method = $featureMap[$feature];
-                $returnJson[$feature] = $method($model);
-            } else {
-                $depth[] = $feature;
-                $returnJson[$feature] = $this->depthFirstFeatureIteration($val, $depth, $model);
-                array_pop($depth);
+        $models = $filter($parentModel);
+        if (!is_array($models)) {
+            $models = [$models];
+        }
+        foreach ($models as $model) {
+            $modelJson = [];
+            foreach ($features as $feature=>$val) {
+                if (is_bool($val) && $val) {
+                    $method = $featureMap[$feature];
+                    $modelJson[$feature] = $method($model);
+                } else {
+                    $depth[] = $feature;
+                    $modelJson[$feature] = $this->depthFirstFeatureIteration($val, $depth, $model);
+                    array_pop($depth);
+                }
             }
+            $returnJson[] = $modelJson;
         }
         return $returnJson;
     }
