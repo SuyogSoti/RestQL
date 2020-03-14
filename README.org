@@ -127,7 +127,7 @@ A structured QL for exposing REST APIs.
     exactly whhat fields to fetch from the database.
 
     It is to be noted that the function for each feature will only be executed
-    if the client requests for the feature but the fucntion for all
+    if the client requests for the feature but the functions for all
     ~filterModel~ will be executed.
   
 * Future
