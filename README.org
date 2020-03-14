@@ -120,6 +120,15 @@ A structured QL for exposing REST APIs.
     ~filterModel~ is called with the ~parentModel~ of the tree passed in. At the
     root, ~parentModel~ is ~null~. Afterwards, every feature defined, has its
     value called with the model from ~filterModel~ passed in as the parameter.
+    Using Clojures this process can be largely automated. The tricky part comes
+    in when we look are querying for the models in ~filterModel~. The
+    ~filterModel~ is where the querying and the actions will take place. When
+    fetching, the developer will have access to the request so they will know
+    exactly whhat fields to fetch from the database.
+
+    It is to be noted that the function for each feature will only be executed
+    if the client requests for the feature but the fucntion for all
+    ~filterModel~ will be executed.
   
 * Future
   
