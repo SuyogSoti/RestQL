@@ -160,6 +160,4 @@ element in that array.
 
 As it can be seen, I have just defined the initial specs. This repo is to
 mainly define the specs and show how it can be implemented in one language. I
-am sorry that the first language is PHP. My work uses PHP and this is
-something I thought of while thinking about work.
-
+am sorry that the first language is PHP.
